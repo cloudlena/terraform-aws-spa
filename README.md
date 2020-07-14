@@ -8,8 +8,8 @@ A [Terraform](https://www.terraform.io/) module for a single page application (e
 module "spa" {
   source = "github.com/mastertinner/terraform-spa"
 
-  service_name       = "website"
-  domain             = "example.com"
-  asset_path_pattern = ["js/*", "css/*"]
+  service_name        = "website"
+  domain              = "example.com"
+  asset_path_patterns = ["js/*", "css/*"]
 }
 ```

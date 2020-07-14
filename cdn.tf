@@ -2,6 +2,10 @@ resource "aws_cloudfront_distribution" "main" {
   origin {
     origin_id   = "S3-${aws_s3_bucket.website.bucket}"
     domain_name = aws_s3_bucket.website.bucket_domain_name
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.main.cloudfront_access_identity_path
+    }
   }
 
   aliases = [aws_s3_bucket.website.bucket]
@@ -99,4 +103,8 @@ resource "aws_cloudfront_distribution" "main" {
     service-name = var.service_name
     environment  = var.environment
   }
+}
+
+resource "aws_cloudfront_origin_access_identity" "main" {
+  comment = "Used to access the website hosting bucket"
 }

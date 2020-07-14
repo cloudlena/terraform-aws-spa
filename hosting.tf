@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "website" {
   bucket        = "${lower(var.hostname)}${var.hostname == "" ? "" : "."}${lower(var.domain)}"
-  acl           = "public-read"
   force_destroy = true
 
   website {
@@ -14,20 +13,36 @@ resource "aws_s3_bucket" "website" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "website" {
+  bucket                  = aws_s3_bucket.website.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 resource "aws_s3_bucket_policy" "website" {
   bucket = aws_s3_bucket.website.id
+  policy = data.aws_iam_policy_document.website_bucket.json
+}
 
-  policy = <<EOF
-{
-  "Version":"2012-10-17",
-  "Statement":[
-    {
-      "Effect":"Allow",
-      "Principal": "*",
-      "Action":"s3:GetObject",
-      "Resource":["${aws_s3_bucket.website.arn}/*"]
+data "aws_iam_policy_document" "website_bucket" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
     }
-  ]
+    actions   = ["s3:ListBucket"]
+    resources = [aws_s3_bucket.website.arn]
+  }
+
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
+    }
+    actions   = ["s3:GetObject"]
+    resources = ["${aws_s3_bucket.website.arn}/*"]
+  }
 }
-EOF
-}
+
