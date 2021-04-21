@@ -4,12 +4,4 @@ A [Terraform](https://www.terraform.io/) module for a single page application (e
 
 ## Usage
 
-```terraform
-module "spa" {
-  source = "github.com/mastertinner/terraform-spa"
-
-  service_name        = "website"
-  domain              = "example.com"
-  asset_path_patterns = ["js/*", "css/*"]
-}
-```
+See [examples/basic](https://github.com/mastertinner/terraform-spa/blob/master/examples/basic/main.tf) for a simple example.
