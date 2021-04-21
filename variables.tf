@@ -1,6 +1,6 @@
 variable "service_name" {
   description = "The name of the service"
-  type        = string
+  default     = "website"
 }
 
 variable "hostname" {
