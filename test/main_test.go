@@ -8,7 +8,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-const domain = "example.com"
+const domain = "bespinian.io"
 
 // An example of how to test the simple Terraform module in examples/terraform-basic-example using Terratest.
 func TestTerraformBasicExample(t *testing.T) {
@@ -35,6 +35,6 @@ func TestTerraformBasicExample(t *testing.T) {
 
 	expectedFQDN := hostname + "." + domain
 	if fqdn != expectedFQDN {
-		t.Errorf("Expected FQDB to be %s, got %s", expectedFQDN, fqdn)
+		t.Errorf("Expected FQDN to be %s, got %s", expectedFQDN, fqdn)
 	}
 }

@@ -45,4 +45,3 @@ data "aws_iam_policy_document" "website_bucket" {
     resources = ["${aws_s3_bucket.website.arn}/*"]
   }
 }
-
