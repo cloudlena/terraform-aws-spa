@@ -6,6 +6,7 @@ resource "aws_acm_certificate" "main" {
   validation_method = "DNS"
 
   tags = {
+    Name         = aws_s3_bucket.website.bucket
     service-name = var.service_name
     environment  = var.environment
   }
