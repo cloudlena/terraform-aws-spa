@@ -37,13 +37,14 @@ resource "aws_cloudfront_distribution" "main" {
   }
 
   ordered_cache_behavior {
-    path_pattern           = "index.html"
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
-    cache_policy_id        = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" // CachingDisabled
-    viewer_protocol_policy = "redirect-to-https"
-    compress               = true
+    path_pattern               = "index.html"
+    allowed_methods            = ["GET", "HEAD"]
+    cached_methods             = ["GET", "HEAD"]
+    target_origin_id           = "S3-${aws_s3_bucket.website.bucket}"
+    cache_policy_id            = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" // CachingDisabled
+    response_headers_policy_id = "67f7725c-6f97-4210-82d7-5512b31e9d03" // SecurityHeadersPolicy
+    viewer_protocol_policy     = "redirect-to-https"
+    compress                   = true
   }
 
   restrictions {
@@ -65,5 +66,5 @@ resource "aws_cloudfront_distribution" "main" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "main" {
-  comment = "Used to access the website hosting bucket"
+  comment = "${var.service_name}${var.resource_suffix}"
 }
