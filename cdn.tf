@@ -28,63 +28,22 @@ resource "aws_cloudfront_distribution" "main" {
   }
 
   default_cache_behavior {
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-${aws_s3_bucket.website.bucket}"
-
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
+    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6" // CachingOptimized
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
   }
 
   ordered_cache_behavior {
-    path_pattern     = "index.html"
-    allowed_methods  = ["GET", "HEAD"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-${aws_s3_bucket.website.bucket}"
-
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-
+    path_pattern           = "index.html"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
+    cache_policy_id        = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" // CachingDisabled
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
-  }
-
-  dynamic "ordered_cache_behavior" {
-    for_each = var.asset_path_patterns
-
-    content {
-      path_pattern     = ordered_cache_behavior.value
-      allowed_methods  = ["GET", "HEAD"]
-      cached_methods   = ["GET", "HEAD"]
-      target_origin_id = "S3-${aws_s3_bucket.website.bucket}"
-
-      forwarded_values {
-        query_string = false
-        cookies {
-          forward = "none"
-        }
-      }
-
-      viewer_protocol_policy = "redirect-to-https"
-      compress               = true
-      min_ttl                = 0
-      default_ttl            = 31536000 # 1 year
-      max_ttl                = 31536000 # 1 year
-    }
   }
 
   restrictions {
