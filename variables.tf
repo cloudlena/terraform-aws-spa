@@ -1,10 +1,12 @@
 variable "service_name" {
   description = "The name of the service"
+  type        = string
   default     = "website"
 }
 
 variable "hostname" {
   description = "The hostname to use on the provided domain"
+  type        = string
   default     = ""
 }
 
@@ -13,18 +15,14 @@ variable "domain" {
   type        = string
 }
 
-variable "asset_path_patterns" {
-  description = "A list of path patterns where assets will be stored. These assets need to include a cache buster because they will be cached for one year."
-  type        = list(string)
-  default     = []
-}
-
 variable "environment" {
   description = "The name of the environment the resources are deployed to"
+  type        = string
   default     = "production"
 }
 
 variable "resource_suffix" {
   description = "A suffix for all resource names to make them unique"
+  type        = string
   default     = ""
 }
