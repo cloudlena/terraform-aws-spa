@@ -19,7 +19,7 @@ func TestTerraformBasicExample(t *testing.T) {
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "../examples/basic",
-		Vars: map[string]interface{}{
+		Vars: map[string]any{
 			"hostname":        hostname,
 			"domain":          domain,
 			"resource_suffix": "-" + hostname,
