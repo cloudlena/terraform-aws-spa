@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "website" {
-  bucket        = "${lower(var.hostname)}${var.hostname == "" ? "" : "."}${lower(var.domain)}"
+  bucket        = local.fqdn
   force_destroy = true
 
   tags = {
@@ -35,19 +35,15 @@ resource "aws_s3_bucket_policy" "website" {
 data "aws_iam_policy_document" "website_bucket" {
   statement {
     principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
-    }
-    actions   = ["s3:ListBucket"]
-    resources = [aws_s3_bucket.website.arn]
-  }
-
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.main.iam_arn]
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
     }
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.website.arn}/*"]
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [aws_cloudfront_distribution.main.arn]
+    }
   }
 }
