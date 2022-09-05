@@ -26,3 +26,7 @@ variable "resource_suffix" {
   type        = string
   default     = ""
 }
+
+locals {
+  fqdn = "${lower(var.hostname)}${var.hostname == "" ? "" : "."}${lower(var.domain)}"
+}

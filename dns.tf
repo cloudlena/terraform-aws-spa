@@ -14,10 +14,14 @@ resource "aws_route53_record" "main" {
   }
 }
 
-resource "aws_route53_record" "www" {
+resource "aws_route53_record" "main_ipv6" {
   zone_id = data.aws_route53_zone.main.zone_id
-  name    = "www.${aws_route53_record.main.name}"
-  type    = "CNAME"
-  ttl     = 300
-  records = [aws_route53_record.main.name]
+  name    = aws_s3_bucket.website.bucket
+  type    = "AAAA"
+
+  alias {
+    name                   = aws_cloudfront_distribution.main.domain_name
+    zone_id                = aws_cloudfront_distribution.main.hosted_zone_id
+    evaluate_target_health = false
+  }
 }

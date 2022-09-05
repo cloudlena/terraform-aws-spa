@@ -1,11 +1,10 @@
 resource "aws_cloudfront_distribution" "main" {
-  origin {
-    origin_id   = "S3-${aws_s3_bucket.website.bucket}"
-    domain_name = aws_s3_bucket.website.bucket_regional_domain_name
+  comment = "The ${aws_s3_bucket.website.bucket} website"
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.main.cloudfront_access_identity_path
-    }
+  origin {
+    origin_id                = "S3-${aws_s3_bucket.website.bucket}"
+    domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
+    origin_access_control_id = aws_cloudfront_origin_access_control.main.id
   }
 
   aliases = [aws_s3_bucket.website.bucket]
@@ -13,6 +12,7 @@ resource "aws_cloudfront_distribution" "main" {
   enabled             = true
   price_class         = "PriceClass_100"
   is_ipv6_enabled     = true
+  http_version        = "http2and3"
   default_root_object = "index.html"
 
   custom_error_response {
@@ -65,6 +65,10 @@ resource "aws_cloudfront_distribution" "main" {
   }
 }
 
-resource "aws_cloudfront_origin_access_identity" "main" {
-  comment = "${var.service_name}${var.resource_suffix}"
+resource "aws_cloudfront_origin_access_control" "main" {
+  name                              = "${var.service_name}${var.resource_suffix}"
+  description                       = "The policy for the ${aws_s3_bucket.website.bucket} origin"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
 }
