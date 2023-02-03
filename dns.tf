@@ -25,3 +25,14 @@ resource "aws_route53_record" "main_ipv6" {
     evaluate_target_health = false
   }
 }
+
+resource "aws_route53_record" "subdomains" {
+  for_each = var.alternate_subdomains
+
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = each.value
+  type    = "CNAME"
+  ttl     = 300
+
+  records = [aws_route53_record.main.name]
+}

@@ -1,10 +1,13 @@
 # CloudFront certificates must be in us-east-1
 # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html#https-requirements-aws-region
+
 resource "aws_acm_certificate" "main" {
   provider = aws.us_east
 
   domain_name       = aws_s3_bucket.website.bucket
   validation_method = "DNS"
+
+  subject_alternative_names = local.aliases
 
   tags = {
     Name         = aws_s3_bucket.website.bucket
