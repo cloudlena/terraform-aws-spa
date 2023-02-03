@@ -7,7 +7,7 @@ resource "aws_cloudfront_distribution" "main" {
     origin_access_control_id = aws_cloudfront_origin_access_control.main.id
   }
 
-  aliases = [aws_s3_bucket.website.bucket]
+  aliases = concat([aws_s3_bucket.website.bucket], local.aliases)
 
   enabled             = true
   price_class         = "PriceClass_100"
