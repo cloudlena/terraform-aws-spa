@@ -1,4 +1,4 @@
-module github.com/mastertinner/terraform-spa
+module github.com/cloudlena/terraform-aws-spa
 
 go 1.20
 
