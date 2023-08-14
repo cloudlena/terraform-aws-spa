@@ -66,7 +66,7 @@ resource "aws_cloudfront_distribution" "main" {
 }
 
 resource "aws_cloudfront_origin_access_control" "main" {
-  name                              = "${var.service_name}${var.resource_suffix}"
+  name                              = aws_s3_bucket.website.bucket
   description                       = "The policy for the ${aws_s3_bucket.website.bucket} origin"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
