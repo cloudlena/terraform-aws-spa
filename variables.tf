@@ -27,12 +27,6 @@ variable "environment" {
   default     = "production"
 }
 
-variable "resource_suffix" {
-  description = "A suffix for all resource names to make them unique"
-  type        = string
-  default     = ""
-}
-
 locals {
   fqdn    = "${lower(var.hostname)}${var.hostname == "" ? "" : "."}${lower(var.domain)}"
   aliases = formatlist("%s.${aws_s3_bucket.website.bucket}", var.alternate_subdomains)

@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.0"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -16,9 +18,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
-variable "hostname" {}
-variable "domain" {}
-variable "resource_suffix" {}
+variable "hostname" {
+  type = string
+}
+variable "domain" {
+  type = string
+}
 
 module "website" {
   source = "../.."
@@ -26,9 +31,8 @@ module "website" {
     aws.us_east = aws.us_east
   }
 
-  hostname        = var.hostname
-  domain          = var.domain
-  resource_suffix = var.resource_suffix
+  hostname = var.hostname
+  domain   = var.domain
 }
 
 output "fqdn" {
