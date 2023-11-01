@@ -8,18 +8,20 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
+const domain = "bespinian.io"
+
 // An example of how to test the simple Terraform module in examples/terraform-basic-example using Terratest.
 func TestTerraformBasicExample(t *testing.T) {
 	t.Parallel()
 
 	testID := strings.ToLower(random.UniqueId())
-	resourceSuffix := "test-" + testID
+	hostname := "test-" + testID
 
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "..",
+		TerraformDir: "../examples/basic",
 		Vars: map[string]any{
-			"environment":     "test",
-			"resource_suffix": resourceSuffix,
+			"hostname": hostname,
+			"domain":   domain,
 		},
 		NoColor: true,
 	})
@@ -28,10 +30,10 @@ func TestTerraformBasicExample(t *testing.T) {
 
 	terraform.InitAndApply(t, terraformOptions)
 
-	functionName := terraform.Output(t, terraformOptions, "function_name")
+	fqdn := terraform.Output(t, terraformOptions, "fqdn")
 
-	expectedFunctionName := "" + resourceSuffix
-	if functionName != expectedFunctionName {
-		t.Errorf("Expected function name to be %s, got %s", expectedFunctionName, functionName)
+	expectedFQDN := hostname + "." + domain
+	if fqdn != expectedFQDN {
+		t.Errorf("Expected FQDN to be %s, got %s", expectedFQDN, fqdn)
 	}
 }
