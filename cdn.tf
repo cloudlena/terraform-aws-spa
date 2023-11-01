@@ -3,8 +3,13 @@ resource "aws_cloudfront_distribution" "main" {
 
   origin {
     origin_id                = "S3-${aws_s3_bucket.website.bucket}"
-    domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
-    origin_access_control_id = aws_cloudfront_origin_access_control.main.id
+    domain_name              = aws_s3_bucket_website_configuration.website.website_endpoint
+    custom_origin_config {
+      http_port  = "80"
+      https_port = "443"
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols = ["TLSv1.2"]
+    }
   }
 
   aliases = concat([aws_s3_bucket.website.bucket], local.aliases)
@@ -63,14 +68,6 @@ resource "aws_cloudfront_distribution" "main" {
     service-name = var.service_name
     environment  = var.environment
   }
-}
-
-resource "aws_cloudfront_origin_access_control" "main" {
-  name                              = aws_s3_bucket.website.bucket
-  description                       = "The policy for the ${aws_s3_bucket.website.bucket} origin"
-  origin_access_control_origin_type = "s3"
-  signing_behavior                  = "always"
-  signing_protocol                  = "sigv4"
 }
 
 data "aws_cloudfront_cache_policy" "caching_optimized" {
