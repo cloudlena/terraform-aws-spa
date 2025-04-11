@@ -1,6 +1,7 @@
 .PHONY: lint
 lint:
-	terraform validate
+	tflint --init
+	tflint --recursive
 
 .PHONY: test
 test:
